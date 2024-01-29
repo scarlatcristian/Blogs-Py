@@ -95,9 +95,14 @@ def login():
         # Find user by email
         user = User.query.filter_by(email=email).first()
 
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('get_all_posts'))
+        if user:
+            if check_password_hash(user.password, password):
+                login_user(user)
+                return redirect(url_for('get_all_posts'))
+            else:
+                flash("Incorrect password, please try again.")
+        else:
+            flash('Email does not exist, please try again.')
     return render_template("login.html", form=login_form)
 
 
