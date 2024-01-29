@@ -60,6 +60,11 @@ def get_all_posts():
 def register():
     register_form = RegisterForm()
     if register_form.validate_on_submit():
+        # If user already exists
+        if User.query.filter_by(email=register_form.email.data).first():
+            flash("You've already sign up with that email!")
+            return redirect(url_for('login'))
+
         hash_and_salted = generate_password_hash(
             register_form.password.data,
             method='pbkdf2:sha256',
